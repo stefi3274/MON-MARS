@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Mars ✿ Agenda Journal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --coral: #FF6B6B;
+    --peach: #FFB347;
+    --lemon: #FFE66D;
+    --mint: #88D8B0;
+    --sky: #A8E6CF;
+    --lilac: #C9B1FF;
+    --rose: #FFB3C6;
+    --cream: #FFF8F0;
+    --warm-white: #FFFDF9;
+    --dark: #2D2D2D;
+    --mid: #6B6B6B;
+    --light: #B0B0B0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #f9f0e8;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 2px solid var(--coral);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 20px rgba(255,107,107,0.1);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--coral);
+    font-weight: 700;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    background: #f5f5f5;
+    padding: 4px;
+    border-radius: 12px;
+  }
+
+  .nav-tab {
+    padding: 7px 14px;
+    border-radius: 9px;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--mid);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .nav-tab.active {
+    background: white;
+    color: var(--coral);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; padding: 32px 24px 60px; max-width: 800px; margin: 0 auto; }
+  .page.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ════════════════════════
+     PAGE 1 — COUVERTURE
+  ════════════════════════ */
+
+  .cover {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FFB347 35%, #FFE66D 65%, #88D8B0 100%);
+    border-radius: 28px;
+    padding: 60px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 32px;
+    box-shadow: 0 20px 60px rgba(255,107,107,0.25);
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+  }
+
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
+
+  .cover-month {
+    font-family: 'Playfair Display', serif;
+    font-size: 80px;
+    font-weight: 900;
+    color: white;
+    line-height: 1;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-year {
+    font-family: 'Caveat', cursive;
+    font-size: 32px;
+    color: rgba(255,255,255,0.9);
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-subtitle {
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    color: rgba(255,255,255,0.85);
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-deco {
+    font-size: 40px;
+    margin-top: 24px;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 8px;
+  }
+
+  .owner-field {
+    margin-top: 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .owner-input {
+    background: rgba(255,255,255,0.3);
+    border: 2px solid rgba(255,255,255,0.6);
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-family: 'Caveat', cursive;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    width: 260px;
+    outline: none;
+    backdrop-filter: blur(10px);
+  }
+
+  .owner-input::placeholder { color: rgba(255,255,255,0.7); }
+
+  /* Objectifs du mois */
+  .section-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border-left: 5px solid var(--coral);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-card::before {
+    content: attr(data-emoji);
+    position: absolute;
+    top: -10px; right: 16px;
+    font-size: 60px;
+    opacity: 0.08;
+  }
+
+  .section-card.mint { border-left-color: var(--mint); }
+  .section-card.lilac { border-left-color: var(--lilac); }
+  .section-card.peach { border-left-color: var(--peach); }
+  .section-card.rose { border-left-color: var(--rose); }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-title .emoji { font-size: 22px; }
+
+  .obj-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .obj-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .obj-check {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--coral);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    color: white;
+  }
+
+  .obj-check.checked { background: var(--coral); border-color: var(--coral); }
+  .obj-check.checked::after { content: '✓'; }
+
+  .obj-input {
+    flex: 1;
+    border: none;
+    border-bottom: 1.5px dashed #e0e0e0;
+    padding: 6px 4px;
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    color: var(--dark);
+    outline: none;
+    background: transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .obj-input:focus { border-bottom-color: var(--coral); }
+  .obj-input::placeholder { color: #ccc; }
+
+  /* ════════════════════════
+     PAGE 2 — PLANNING
+  ════════════════════════ */
+
+  .week-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--coral);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .week-badge {
+    background: var(--coral);
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .day-cell {
+    background: white;
+    border-radius: 14px;
+    padding: 10px 6px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    min-height: 90px;
+  }
+
+  .day-cell:hover { border-color: var(--coral); transform: translateY(-2px); }
+  .day-cell.today { border-color: var(--coral); background: #FFF0F0; }
+  .day-cell.has-note { border-color: var(--mint); }
+
+  .day-name {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .day-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+
+  .day-cell.today .day-num { color: var(--coral); }
+
+  .day-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background: transparent;
+  }
+
+  .day-cell.has-note .day-dot { background: var(--mint); }
+
+  .day-task {
+    font-size: 9px;
+    color: var(--mid);
+    margin-top: 4px;
+    font-family: 'Caveat', cursive;
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  /* Semaine détail */
+  .week-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .week-day-row {
+    background: white;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  .wdr-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .wdr-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  .wdr-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .wdr-date {
+    font-size: 12px;
+    color: var(--light);
+    margin-left: auto;
+  }
+
+  .wdr-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px dashed #e8e8e8;
+    padding: 5px 2px;
+    font-family: 'Caveat', cursive;
+    font-size: 16px;
+    color: var(--dark);
+    outline: none;
+    background: transparent;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .wdr-input::placeholder { color: #ddd; }
+
+  /* ════════════════════════
+     PAGE 3 — JOURNAL
+  ════════════════════════ */
+
+  .journal-date-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+
+  .jdate-btn {
+    flex-shrink: 0;
+    width: 48px; height: 62px;
+    border-radius: 14px;
+    border: 2px solid #eee;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    transition: all 0.2s ease;
+  }
+
+  .jdate-btn.active {
+    background: var(--coral);
+    border-color: var(--coral);
+    box-shadow: 0 4px 16px rgba(255,107,107,0.35);
+  }
+
+  .jdate-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  .jdate-btn.active .jdate-num { color: white; }
+
+  .jdate-day {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--light);
+    text-transform: uppercase;
+  }
+
+  .jdate-btn.active .jdate-day { color: rgba(255,255,255,0.8); }
+
+  .journal-entry {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .journal-entry::before {
+    content: '"';
+    position: absolute;
+    top: 12px; left: 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 80px;
+    color: var(--rose);
+    opacity: 0.3;
+    line-height: 1;
+  }
+
+  .journal-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .journal-day-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    font-style: italic;
+  }
+
+  .mood-selector {
+    display: flex;
+    gap: 6px;
+  }
+
+  .mood-btn {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: #f5f5f5;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .mood-btn:hover { transform: scale(1.2); }
+  .mood-btn.selected { border-color: var(--coral); background: #FFF0F0; transform: scale(1.15); }
+
+  .journal-textarea {
+    width: 100%;
+    min-height: 160px;
+    border: none;
+    font-family: 'Caveat', cursive;
+    font-size: 19px;
+    line-height: 1.8;
+    color: var(--dark);
+    outline: none;
+    resize: none;
+    background: transparent;
+    background-image: repeating-linear-gradient(transparent, transparent 35px, #f0f0f0 35px, #f0f0f0 36px);
+    padding-top: 8px;
+  }
+
+  .journal-textarea::placeholder { color: #ccc; }
+
+  .journal-prompts {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed #eee;
+  }
+
+  .prompt-chip {
+    padding: 6px 12px;
+    background: var(--cream);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--mid);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid #ffe0d0;
+  }
+
+  .prompt-chip:hover { background: #FFE0D0; color: var(--coral); }
+
+  /* ════════════════════════
+     PAGE 4 — HUMEUR
+  ════════════════════════ */
+
+  .mood-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+
+  .mood-cell {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .mood-cell:hover { transform: scale(1.08); }
+  .mood-cell.selected-mood { border-color: var(--coral); transform: scale(1.05); }
+
+  .mood-cell-num {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--light);
+  }
+
+  .mood-cell-emoji { font-size: 18px; }
+
+  .mood-legend {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .mood-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--mid);
+  }
+
+  .mood-bar-chart {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+  }
+
+  .chart-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--dark);
+  }
+
+  .bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 100px;
+  }
+
+  .bar-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+
+  .bar {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    transition: height 0.5s ease;
+    min-height: 4px;
+  }
+
+  .bar-label { font-size: 9px; color: var(--light); font-weight: 600; }
+
+  /* ════════════════════════
+     PAGE 5 — AFFIRMATIONS
+  ════════════════════════ */
+
+  .affirmation-card {
+    background: linear-gradient(135deg, var(--coral), var(--peach));
+    border-radius: 24px;
+    padding: 40px 32px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 40px rgba(255,107,107,0.25);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .affirmation-card::before {
+    content: '✦';
+    position: absolute;
+    top: 16px; left: 20px;
+    font-size: 30px;
+    color: rgba(255,255,255,0.2);
+  }
+
+  .affirmation-card::after {
+    content: '✦';
+    position: absolute;
+    bottom: 16px; right: 20px;
+    font-size: 30px;
+    color: rgba(255,255,255,0.2);
+  }
+
+  .affirmation-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    font-style: italic;
+    color: white;
+    line-height: 1.4;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 1;
+  }
+
+  .affirmation-author {
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    color: rgba(255,255,255,0.8);
+    margin-top: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .affirmation-nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .aff-nav-btn {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 2px solid var(--coral);
+    background: white;
+    color: var(--coral);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .aff-nav-btn:hover { background: var(--coral); color: white; }
+
+  .my-affirmations {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  .my-aff-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dashed #f0f0f0;
+  }
+
+  .my-aff-item:last-child { border-bottom: none; }
+
+  .aff-star { color: var(--peach); font-size: 16px; margin-top: 4px; }
+
+  .aff-input {
+    flex: 1;
+    border: none;
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    color: var(--dark);
+    outline: none;
+    background: transparent;
+    line-height: 1.5;
+  }
+
+  .aff-input::placeholder { color: #ccc; }
+
+  /* Shared */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--dark);
+    margin-bottom: 6px;
+  }
+
+  .section-sub {
+    font-family: 'Caveat', cursive;
+    font-size: 17px;
+    color: var(--mid);
+    margin-bottom: 28px;
+  }
+
+  .add-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--coral);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 12px;
+  }
+
+  .add-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,107,107,0.3); }
+
+  /* ── Settings button ── */
+  .settings-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  .settings-btn:hover { transform: rotate(20deg) scale(1.1); }
+
+  /* ── Settings panel ── */
+  .settings-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 200;
+  }
+  .settings-overlay.open { display: block; }
+
+  .settings-panel {
+    position: fixed;
+    top: 0; right: -340px;
+    width: 320px;
+    height: 100vh;
+    background: white;
+    z-index: 300;
+    box-shadow: -4px 0 30px rgba(0,0,0,0.12);
+    transition: right 0.3s ease;
+    overflow-y: auto;
+  }
+  .settings-panel.open { right: 0; }
+
+  .settings-inner { padding: 24px 20px 40px; }
+
+  .settings-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--dark);
+  }
+
+  .settings-section { margin-bottom: 24px; }
+
+  .settings-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--light);
+    margin-bottom: 12px;
+  }
+
+  .theme-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .theme-opt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 8px 4px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    font-size: 12px;
+    color: var(--mid);
+  }
+  .theme-opt:hover { background: #f5f5f5; }
+  .theme-opt.active { border-color: var(--coral); background: #fff5f5; }
+
+  .theme-preview {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+
+  .font-options { display: flex; flex-direction: column; gap: 8px; }
+
+  .font-opt {
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 2px solid #eee;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--dark);
+    transition: all 0.2s ease;
+  }
+  .font-opt:hover { border-color: var(--coral); }
+  .font-opt.active { border-color: var(--coral); background: #fff5f5; }
+
+  .bg-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .bg-opt {
+    padding: 10px 8px;
+    border-radius: 10px;
+    border: 2px solid #eee;
+    text-align: center;
+    font-size: 12px;
+    color: var(--mid);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .bg-opt:hover { border-color: var(--coral); }
+  .bg-opt.active { border-color: var(--coral); }
+
+  .settings-close {
+    width: 100%;
+    padding: 12px;
+    background: var(--coral);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s ease;
+  }
+  .settings-close:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  .save-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--mint);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .save-toast.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="top-nav">
+  <div class="nav-logo">Mon Mars ✿</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('cover')">Accueil</button>
+    <button class="nav-tab" onclick="showPage('planning')">Planning</button>
+    <button class="nav-tab" onclick="showPage('journal')">Journal</button>
+    <button class="nav-tab" onclick="showPage('humeur')">Humeur</button>
+    <button class="nav-tab" onclick="showPage('affirmations')">✨ Affirmations</button>
+  </div>
+  <button class="settings-btn" onclick="toggleSettings()" title="Personnaliser">🎨</button>
+</div>
+
+<!-- Panneau personnalisation -->
+<div class="settings-panel" id="settings-panel">
+  <div class="settings-inner">
+    <div class="settings-title">🎨 Personnalise ton agenda</div>
+
+    <div class="settings-section">
+      <div class="settings-label">Thème de couleurs</div>
+      <div class="theme-options">
+        <div class="theme-opt active" data-theme="coral" onclick="setTheme(this, 'coral')">
+          <div class="theme-preview" style="background:linear-gradient(135deg,#FF6B6B,#FFB347,#FFE66D)"></div>
+          <span>Soleil</span>
+        </div>
+        <div class="theme-opt" data-theme="violet" onclick="setTheme(this, 'violet')">
+          <div class="theme-preview" style="background:linear-gradient(135deg,#C9B1FF,#FF9DE2,#FFB3C6)"></div>
+          <span>Lila</span>
+        </div>
+        <div class="theme-opt" data-theme="mint" onclick="setTheme(this, 'mint')">
+          <div class="theme-preview" style="background:linear-gradient(135deg,#88D8B0,#5CCFCF,#A8E6CF)"></div>
+          <span>Menthe</span>
+        </div>
+        <div class="theme-opt" data-theme="rose" onclick="setTheme(this, 'rose')">
+          <div class="theme-preview" style="background:linear-gradient(135deg,#FF8FAB,#FF6B9D,#FFC2D4)"></div>
+          <span>Rose</span>
+        </div>
+        <div class="theme-opt" data-theme="ocean" onclick="setTheme(this, 'ocean')">
+          <div class="theme-preview" style="background:linear-gradient(135deg,#4FACFE,#00F2FE,#A8EDEA)"></div>
+          <span>Océan</span>
+        </div>
+        <div class="theme-opt" data-theme="sunset" onclick="setTheme(this, 'sunset')">
+          <div class="theme-preview" style="background:linear-gradient(135deg,#FA8231,#F7B731,#FFC312)"></div>
+          <span>Coucher</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">Police de caractères</div>
+      <div class="font-options">
+        <div class="font-opt active" onclick="setFont(this, 'playfair')" style="font-family:'Playfair Display',serif;">Playfair — Élégant</div>
+        <div class="font-opt" onclick="setFont(this, 'caveat')" style="font-family:'Caveat',cursive;">Caveat — Manuscrit</div>
+        <div class="font-opt" onclick="setFont(this, 'dm')" style="font-family:'DM Sans',sans-serif;">DM Sans — Moderne</div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">Fond de page</div>
+      <div class="bg-options">
+        <div class="bg-opt active" onclick="setBg(this, '#f9f0e8')" style="background:#f9f0e8;">Crème</div>
+        <div class="bg-opt" onclick="setBg(this, '#f0f4ff')" style="background:#f0f4ff;">Bleu doux</div>
+        <div class="bg-opt" onclick="setBg(this, '#f0fff4')" style="background:#f0fff4;">Vert tendre</div>
+        <div class="bg-opt" onclick="setBg(this, '#fff0f6')" style="background:#fff0f6;">Rose pâle</div>
+        <div class="bg-opt" onclick="setBg(this, '#fffff0')" style="background:#fffff0;">Citron</div>
+        <div class="bg-opt" onclick="setBg(this, '#ffffff')" style="background:#ffffff;border:1px solid #eee;">Blanc</div>
+      </div>
+    </div>
+
+    <button class="settings-close" onclick="toggleSettings()">Fermer ✕</button>
+  </div>
+</div>
+<div class="settings-overlay" id="settings-overlay" onclick="toggleSettings()"></div>
+
+
+<!-- TOAST -->
+<div class="save-toast" id="toast">✓ Sauvegardé</div>
+
+<!-- ══ PAGE ACCUEIL ══ -->
+<div class="page active" id="page-cover">
+
+  <div class="cover">
+    <div class="cover-month">Mars</div>
+    <div class="cover-year">2026</div>
+    <div class="cover-subtitle">Mon agenda · Mon journal · Mon mois</div>
+    <div class="cover-deco">🌸 ✿ 🌷</div>
+    <div class="owner-field">
+      <input class="owner-input" placeholder="Ton prénom ici..." id="owner-name">
+    </div>
+  </div>
+
+  <!-- Objectifs du mois -->
+  <div class="section-card" data-emoji="🎯">
+    <div class="card-title"><span class="emoji">🎯</span> Mes objectifs de Mars</div>
+    <div class="obj-list" id="obj-list">
+      <div class="obj-item">
+        <div class="obj-check" onclick="toggleCheck(this)"></div>
+        <input class="obj-input" placeholder="Mon premier objectif ce mois-ci..." oninput="autoSave()">
+      </div>
+      <div class="obj-item">
+        <div class="obj-check" onclick="toggleCheck(this)"></div>
+        <input class="obj-input" placeholder="Ce que je veux accomplir..." oninput="autoSave()">
+      </div>
+      <div class="obj-item">
+        <div class="obj-check" onclick="toggleCheck(this)"></div>
+        <input class="obj-input" placeholder="Un défi que je me lance..." oninput="autoSave()">
+      </div>
+      <div class="obj-item">
+        <div class="obj-check" onclick="toggleCheck(this)"></div>
+        <input class="obj-input" placeholder="Quelque chose pour moi..." oninput="autoSave()">
+      </div>
+    </div>
+    <button class="add-btn" onclick="addObjectif()">+ Ajouter un objectif</button>
+  </div>
+
+  <!-- Intention du mois -->
+  <div class="section-card mint" data-emoji="🌿">
+    <div class="card-title"><span class="emoji">🌿</span> Mon intention de Mars</div>
+    <textarea class="journal-textarea" placeholder="Ce mois-ci, je choisis de..." style="min-height:90px;" oninput="autoSave()"></textarea>
+  </div>
+
+  <!-- Mot du mois -->
+  <div class="section-card lilac" data-emoji="💜">
+    <div class="card-title"><span class="emoji">💜</span> Mon mot du mois</div>
+    <input class="obj-input" style="font-size:28px; font-family:'Playfair Display',serif; font-style:italic;" placeholder="Courage, Légèreté, Joie..." oninput="autoSave()">
+  </div>
+
+</div>
+
+<!-- ══ PAGE PLANNING ══ -->
+<div class="page" id="page-planning">
+  <div class="section-title">Planning de Mars</div>
+  <div class="section-sub">Organisation semaine par semaine 🗓</div>
+
+  <!-- Calendrier visuel -->
+  <div class="section-card peach" data-emoji="📅" style="margin-bottom:28px;">
+    <div class="card-title"><span class="emoji">📅</span> Vue du mois</div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px;">
+      <div style="text-align:center;font-size:11px;font-weight:600;color:#999;padding:4px;">L</div>
+      <div style="text-align:center;font-size:11px;font-weight:600;color:#999;padding:4px;">M</div>
+      <div style="text-align:center;font-size:11px;font-weight:600;color:#999;padding:4px;">M</div>
+      <div style="text-align:center;font-size:11px;font-weight:600;color:#999;padding:4px;">J</div>
+      <div style="text-align:center;font-size:11px;font-weight:600;color:#999;padding:4px;">V</div>
+      <div style="text-align:center;font-size:11px;font-weight:600;color:#999;padding:4px;">S</div>
+      <div style="text-align:center;font-size:11px;font-weight:600;color:#999;padding:4px;">D</div>
+    </div>
+    <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;"></div>
+  </div>
+
+  <!-- Semaines -->
+  <div id="weeks-container"></div>
+
+</div>
+
+<!-- ══ PAGE JOURNAL ══ -->
+<div class="page" id="page-journal">
+  <div class="section-title">Mon Journal</div>
+  <div class="section-sub">Chaque jour, une page pour toi 🖊</div>
+
+  <div class="journal-date-nav" id="date-nav"></div>
+
+  <div class="journal-entry" id="journal-entry">
+    <div class="journal-top">
+      <div class="journal-day-title" id="journal-date-title">Samedi 1er Mars</div>
+      <div class="mood-selector">
+        <button class="mood-btn" onclick="selectMood(this, '😊')" title="Heureuse">😊</button>
+        <button class="mood-btn" onclick="selectMood(this, '😌')" title="Sereine">😌</button>
+        <button class="mood-btn" onclick="selectMood(this, '😔')" title="Triste">😔</button>
+        <button class="mood-btn" onclick="selectMood(this, '😤')" title="Frustrée">😤</button>
+        <button class="mood-btn" onclick="selectMood(this, '🥰')" title="Amoureuse">🥰</button>
+      </div>
+    </div>
+    <textarea class="journal-textarea" id="journal-text" placeholder="Aujourd'hui je me sens... j'ai pensé à... ce qui m'a marquée c'est..." oninput="autoSave()"></textarea>
+    <div class="journal-prompts">
+      <span class="prompt-chip" onclick="addPrompt('Ma plus belle chose aujourd\'hui : ')">✨ Belle chose</span>
+      <span class="prompt-chip" onclick="addPrompt('Ce dont je suis fière : ')">💪 Fierté</span>
+      <span class="prompt-chip" onclick="addPrompt('Ce que je ressens vraiment : ')">💭 Ressenti</span>
+      <span class="prompt-chip" onclick="addPrompt('Demain je veux : ')">🌅 Demain</span>
+      <span class="prompt-chip" onclick="addPrompt('Une pensée pour moi : ')">🌸 Pour moi</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE HUMEUR ══ -->
+<div class="page" id="page-humeur">
+  <div class="section-title">Suivi d'Humeur</div>
+  <div class="section-sub">Comment tu te sens chaque jour de Mars 🌈</div>
+
+  <div class="mood-legend">
+    <div class="mood-legend-item"><span>😊</span> Super</div>
+    <div class="mood-legend-item"><span>😌</span> Bien</div>
+    <div class="mood-legend-item"><span>😐</span> Neutre</div>
+    <div class="mood-legend-item"><span>😔</span> Difficile</div>
+    <div class="mood-legend-item"><span>🌟</span> Exceptionnel</div>
+  </div>
+
+  <div class="mood-grid" id="mood-grid"></div>
+
+  <div class="mood-bar-chart">
+    <div class="chart-title">Tendance du mois</div>
+    <div class="bars" id="mood-bars"></div>
+  </div>
+
+  <div class="section-card rose" data-emoji="💕">
+    <div class="card-title"><span class="emoji">💕</span> Note de la semaine</div>
+    <textarea class="journal-textarea" placeholder="Cette semaine en quelques mots..." style="min-height:80px;" oninput="autoSave()"></textarea>
+  </div>
+</div>
+
+<!-- ══ PAGE AFFIRMATIONS ══ -->
+<div class="page" id="page-affirmations">
+  <div class="section-title">Affirmations ✨</div>
+  <div class="section-sub">Les mots qui te portent ce mois-ci 🌸</div>
+
+  <div class="affirmation-card" id="aff-card">
+    <div class="affirmation-text" id="aff-text">"Je suis capable de tout ce que je décide d'accomplir."</div>
+    <div class="affirmation-author" id="aff-author">— Affirmation du jour</div>
+  </div>
+
+  <div class="affirmation-nav">
+    <button class="aff-nav-btn" onclick="prevAff()">‹</button>
+    <button class="aff-nav-btn" onclick="nextAff()">›</button>
+  </div>
+
+  <div class="my-affirmations section-card" data-emoji="⭐">
+    <div class="card-title"><span class="emoji">⭐</span> Mes affirmations personnelles</div>
+    <div id="aff-list">
+      <div class="my-aff-item">
+        <span class="aff-star">★</span>
+        <input class="aff-input" placeholder="Je suis..." oninput="autoSave()">
+      </div>
+      <div class="my-aff-item">
+        <span class="aff-star">★</span>
+        <input class="aff-input" placeholder="J'ai la force de..." oninput="autoSave()">
+      </div>
+      <div class="my-aff-item">
+        <span class="aff-star">★</span>
+        <input class="aff-input" placeholder="Je mérite..." oninput="autoSave()">
+      </div>
+      <div class="my-aff-item">
+        <span class="aff-star">★</span>
+        <input class="aff-input" placeholder="Ce mois-ci je choisis..." oninput="autoSave()">
+      </div>
+    </div>
+    <button class="add-btn" onclick="addAffirmation()">+ Ajouter une affirmation</button>
+  </div>
+
+  <!-- Citation du mois -->
+  <div class="section-card mint" data-emoji="🌿" style="margin-top:20px;">
+    <div class="card-title"><span class="emoji">🌿</span> Ma citation préférée de Mars</div>
+    <textarea class="journal-textarea" placeholder="La citation qui me résonne ce mois-ci..." style="min-height:80px;" oninput="autoSave()"></textarea>
+    <input class="obj-input" placeholder="— Auteur" style="margin-top:8px;" oninput="autoSave()">
+  </div>
+</div>
+
+<script>
+  // ── Navigation ──
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // ── Objectifs ──
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    autoSave();
+  }
+
+  function addObjectif() {
+    const list = document.getElementById('obj-list');
+    const item = document.createElement('div');
+    item.className = 'obj-item';
+    item.innerHTML = `
+      <div class="obj-check" onclick="toggleCheck(this)"></div>
+      <input class="obj-input" placeholder="Mon objectif..." oninput="autoSave()">
+    `;
+    list.appendChild(item);
+  }
+
+  // ── Calendrier Mars 2025 ──
+  // Mars 2025 commence un Samedi (jour 6) — 31 jours
+  function buildCalendar() {
+    const grid = document.getElementById('cal-grid');
+    const startDay = 6; // Dimanche = index 6 (Lun=0)
+    const totalDays = 31;
+    const colors = ['#FFB3C6','#FFD3A5','#FFE66D','#88D8B0','#C9B1FF','#A8E6CF','#FF6B6B'];
+
+    // Empty cells
+    for (let i = 0; i < startDay; i++) {
+      const empty = document.createElement('div');
+      empty.style.cssText = 'height:34px;';
+      grid.appendChild(empty);
+    }
+
+    for (let d = 1; d <= totalDays; d++) {
+      const cell = document.createElement('div');
+      const dayIdx = (startDay + d - 1) % 7;
+      cell.style.cssText = `
+        text-align:center;
+        padding:6px 2px;
+        border-radius:8px;
+        font-family:'Playfair Display',serif;
+        font-size:14px;
+        font-weight:700;
+        cursor:pointer;
+        background:${d === 4 ? colors[0] : 'white'};
+        color:${d === 4 ? 'white' : '#2D2D2D'};
+        transition:all 0.15s ease;
+        box-shadow:0 1px 4px rgba(0,0,0,0.05);
+      `;
+      cell.textContent = d;
+      cell.onclick = () => {
+        document.querySelectorAll('#cal-grid div').forEach(c => {
+          if (c.textContent && !isNaN(c.textContent)) {
+            c.style.background = 'white';
+            c.style.color = '#2D2D2D';
+          }
+        });
+        const colorIdx = Math.floor(Math.random() * colors.length);
+        cell.style.background = colors[colorIdx];
+        cell.style.color = 'white';
+      };
+      grid.appendChild(cell);
+    }
+  }
+
+  // ── Semaines ──
+  function buildWeeks() {
+    const container = document.getElementById('weeks-container');
+    const weeks = [
+      { label: 'Semaine 1', dates: ['1'], days: ['Dim'] },
+      { label: 'Semaine 2', dates: ['2','3','4','5','6','7','8'], days: ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'] },
+      { label: 'Semaine 3', dates: ['9','10','11','12','13','14','15'], days: ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'] },
+      { label: 'Semaine 4', dates: ['16','17','18','19','20','21','22'], days: ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'] },
+      { label: 'Semaine 5', dates: ['23','24','25','26','27','28','29'], days: ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'] },
+      { label: 'Semaine 6', dates: ['30','31'], days: ['Lun','Mar'] },
+    ];
+    const dotColors = ['#FF6B6B','#FFB347','#FFE66D','#88D8B0','#C9B1FF','#FFB3C6','#A8E6CF'];
+
+    weeks.forEach((w, wi) => {
+      const section = document.createElement('div');
+      section.innerHTML = `
+        <div class="week-header">
+          <span>${w.label}</span>
+          <span class="week-badge">Mars 2025</span>
+        </div>
+      `;
+      const grid = document.createElement('div');
+      grid.className = 'week-detail';
+      w.dates.forEach((d, di) => {
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'week-day-row';
+        dayDiv.innerHTML = `
+          <div class="wdr-header">
+            <div class="wdr-dot" style="background:${dotColors[di % 7]}"></div>
+            <div class="wdr-name">${w.days[di]}</div>
+            <div class="wdr-date">${d} Mars</div>
+          </div>
+          <input class="wdr-input" placeholder="Tâches du jour..." oninput="autoSave()">
+          <input class="wdr-input" placeholder="Notes..." oninput="autoSave()">
+        `;
+        grid.appendChild(dayDiv);
+      });
+      section.appendChild(grid);
+      container.appendChild(section);
+    });
+  }
+
+  // ── Journal dates ──
+  function buildDateNav() {
+    const nav = document.getElementById('date-nav');
+    const days = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam','Dim','Lun','Mar','Mer','Jeu','Ven','Sam','Dim','Lun','Mar','Mer','Jeu','Ven','Sam','Dim','Lun','Mar','Mer','Jeu','Ven','Sam','Dim','Lun','Mar'];
+    for (let d = 1; d <= 31; d++) {
+      const btn = document.createElement('button');
+      btn.className = 'jdate-btn' + (d === 1 ? ' active' : '');
+      btn.innerHTML = `<span class="jdate-num">${d}</span><span class="jdate-day">${days[d-1]}</span>`;
+      btn.onclick = () => selectDay(btn, d, days[d-1]);
+      nav.appendChild(btn);
+    }
+  }
+
+  const dayNames = ['Sam','Dim','Lun','Mar','Mer','Jeu','Ven','Sam','Dim','Lun','Mar','Mer','Jeu','Ven','Sam','Dim','Lun','Mar','Mer','Jeu','Ven','Sam','Dim','Lun','Mar','Mer','Jeu','Ven','Sam','Dim','Lun'];
+  const fullDays = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche','Lundi','Mardi'];
+
+  function selectDay(btn, d, dayName) {
+    // Sauvegarder le jour actuel avant de changer
+    const activeBtn = document.querySelector('.jdate-btn.active');
+    if (activeBtn) {
+      const currentD = parseInt(activeBtn.querySelector('.jdate-num').textContent);
+      const jt = document.getElementById('journal-text');
+      if (jt) journalData[currentD] = jt.value;
+    }
+
+    document.querySelectorAll('.jdate-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    document.getElementById('journal-date-title').textContent = `${fullDays[d-1]} ${d}${d===1?'er':''} Mars`;
+    document.getElementById('journal-text').value = journalData[d] || '';
+  }
+
+  const journalData = {};
+
+  function addPrompt(text) {
+    const ta = document.getElementById('journal-text');
+    ta.value += (ta.value ? '\n' : '') + text;
+    ta.focus();
+  }
+
+  function selectMood(btn, mood) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    autoSave();
+  }
+
+  // ── Mood Grid ──
+  const moodEmojis = ['😊','😌','😐','😔','🌟'];
+  const moodColors = ['#FFE0D0','#D0F0E0','#F0F0F0','#D0D0F0','#FFF0A0'];
+
+  function buildMoodGrid() {
+    const grid = document.getElementById('mood-grid');
+    for (let d = 1; d <= 31; d++) {
+      const cell = document.createElement('div');
+      cell.className = 'mood-cell';
+      cell.innerHTML = `<span class="mood-cell-num">${d}</span><span class="mood-cell-emoji">·</span>`;
+      let moodIdx = -1;
+      cell.onclick = () => {
+        moodIdx = (moodIdx + 1) % moodEmojis.length;
+        cell.querySelector('.mood-cell-emoji').textContent = moodEmojis[moodIdx];
+        cell.style.background = moodColors[moodIdx];
+        cell.classList.add('selected-mood');
+        updateBars();
+        autoSave();
+      };
+      grid.appendChild(cell);
+    }
+    buildBars();
+  }
+
+  function buildBars() {
+    const bars = document.getElementById('mood-bars');
+    const weeks = ['S1','S2','S3','S4','S5'];
+    const heights = [60, 75, 45, 85, 70];
+    const colors = ['#FF6B6B','#FFB347','#88D8B0','#C9B1FF','#FFB3C6'];
+    weeks.forEach((w, i) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'bar-wrap';
+      wrap.innerHTML = `
+        <div class="bar" style="height:${heights[i]}px;background:${colors[i]};"></div>
+        <div class="bar-label">${w}</div>
+      `;
+      bars.appendChild(wrap);
+    });
+  }
+
+  function updateBars() { /* visual only for now */ }
+
+  // ── Affirmations ──
+  const affirmations = [
+    { text: "Je suis capable de tout ce que je décide d'accomplir.", author: "— Affirmation du jour" },
+    { text: "Ma valeur ne dépend pas de la validation des autres.", author: "— Pour moi, par moi" },
+    { text: "Je choisis la paix, la joie et l'abondance chaque matin.", author: "— Mon mantra de Mars" },
+    { text: "Je grandis. Je fleuris. Je suis exactement là où je dois être.", author: "— Douceur à soi" },
+    { text: "Mes rêves méritent mon temps, mon énergie et ma foi.", author: "— Affirmation du jour" },
+    { text: "Je suis la seule personne dont j'ai besoin pour commencer.", author: "— Puissance intérieure" },
+    { text: "Chaque jour je deviens une meilleure version de moi-même.", author: "— Croissance" },
+  ];
+
+  let affIdx = 0;
+
+  function nextAff() {
+    affIdx = (affIdx + 1) % affirmations.length;
+    updateAff();
+  }
+
+  function prevAff() {
+    affIdx = (affIdx - 1 + affirmations.length) % affirmations.length;
+    updateAff();
+  }
+
+  function updateAff() {
+    const card = document.getElementById('aff-card');
+    card.style.opacity = '0';
+    card.style.transform = 'scale(0.97)';
+    setTimeout(() => {
+      document.getElementById('aff-text').textContent = `"${affirmations[affIdx].text}"`;
+      document.getElementById('aff-author').textContent = affirmations[affIdx].author;
+      card.style.transition = 'all 0.3s ease';
+      card.style.opacity = '1';
+      card.style.transform = 'scale(1)';
+    }, 200);
+  }
+
+  function addAffirmation() {
+    const list = document.getElementById('aff-list');
+    const item = document.createElement('div');
+    item.className = 'my-aff-item';
+    item.innerHTML = `<span class="aff-star">★</span><input class="aff-input" placeholder="Mon affirmation..." oninput="autoSave()">`;
+    list.appendChild(item);
+  }
+
+  // ── Personnalisation ──
+  const themes = {
+    coral:  { main: '#FF6B6B', second: '#FFB347', third: '#FFE66D', cover: 'linear-gradient(135deg,#FF6B6B,#FFB347,#FFE66D,#88D8B0)' },
+    violet: { main: '#C9B1FF', second: '#FF9DE2', third: '#FFB3C6', cover: 'linear-gradient(135deg,#C9B1FF,#FF9DE2,#FFB3C6)' },
+    mint:   { main: '#88D8B0', second: '#5CCFCF', third: '#A8E6CF', cover: 'linear-gradient(135deg,#88D8B0,#5CCFCF,#A8E6CF)' },
+    rose:   { main: '#FF8FAB', second: '#FF6B9D', third: '#FFC2D4', cover: 'linear-gradient(135deg,#FF8FAB,#FF6B9D,#FFC2D4)' },
+    ocean:  { main: '#4FACFE', second: '#00F2FE', third: '#A8EDEA', cover: 'linear-gradient(135deg,#4FACFE,#00F2FE,#A8EDEA)' },
+    sunset: { main: '#FA8231', second: '#F7B731', third: '#FFC312', cover: 'linear-gradient(135deg,#FA8231,#F7B731,#FFC312)' },
+  };
+
+  const fonts = {
+    playfair: "'Playfair Display', serif",
+    caveat: "'Caveat', cursive",
+    dm: "'DM Sans', sans-serif",
+  };
+
+  function toggleSettings() {
+    document.getElementById('settings-panel').classList.toggle('open');
+    document.getElementById('settings-overlay').classList.toggle('open');
+  }
+
+  function setTheme(el, name) {
+    document.querySelectorAll('.theme-opt').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const t = themes[name];
+    document.documentElement.style.setProperty('--coral', t.main);
+    document.documentElement.style.setProperty('--peach', t.second);
+    document.documentElement.style.setProperty('--lemon', t.third);
+    const cover = document.querySelector('.cover');
+    if (cover) cover.style.background = t.cover;
+    savePersonalization();
+  }
+
+  function setFont(el, name) {
+    document.querySelectorAll('.font-opt').forEach(f => f.classList.remove('active'));
+    el.classList.add('active');
+    const fontVal = fonts[name];
+    document.querySelectorAll('.section-title, .card-title, .cover-month, .week-header, .journal-day-title, .match-name, .profile-name, .affirmation-text').forEach(e => {
+      e.style.fontFamily = fontVal;
+    });
+    document.documentElement.style.setProperty('--title-font', fontVal);
+    savePersonalization();
+  }
+
+  function setBg(el, color) {
+    document.querySelectorAll('.bg-opt').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    document.body.style.background = color;
+    savePersonalization();
+  }
+
+  function savePersonalization() {
+    try {
+      const activeTheme = document.querySelector('.theme-opt.active')?.dataset.theme || 'coral';
+      const activeFontEl = document.querySelector('.font-opt.active');
+      const activeFont = activeFontEl ? (activeFontEl.getAttribute('onclick').match(/setFont\(this, '(\w+)'\)/)?.[1] || 'playfair') : 'playfair';
+      const activeBg = document.body.style.background || '#f9f0e8';
+      const perso = { theme: activeTheme, font: activeFont, bg: activeBg };
+      localStorage.setItem('monMars2025_perso', JSON.stringify(perso));
+    } catch(e) {}
+  }
+
+  function restorePersonalization() {
+    try {
+      const raw = localStorage.getItem('monMars2025_perso');
+      if (!raw) return;
+      const perso = JSON.parse(raw);
+      if (perso.theme) {
+        const themeEl = document.querySelector(`.theme-opt[data-theme="${perso.theme}"]`);
+        if (themeEl) setTheme(themeEl, perso.theme);
+      }
+      if (perso.font) {
+        const fontEl = document.querySelector(`.font-opt[onclick*="${perso.font}"]`);
+        if (fontEl) setFont(fontEl, perso.font);
+      }
+      if (perso.bg) {
+        const bgEl = Array.from(document.querySelectorAll('.bg-opt')).find(el => {
+          const onclick = el.getAttribute('onclick');
+          return onclick && onclick.includes(perso.bg.replace('#', '\\#'));
+        });
+        document.body.style.background = perso.bg;
+        if (bgEl) { document.querySelectorAll('.bg-opt').forEach(b => b.classList.remove('active')); bgEl.classList.add('active'); }
+      }
+    } catch(e) {}
+  }
+
+
+  let saveTimer;
+
+  function saveAll() {
+    try {
+      const data = {};
+
+      // Prénom
+      data.ownerName = document.getElementById('owner-name')?.value || '';
+
+      // Tous les inputs/textareas indexés par position
+      const allFields = document.querySelectorAll('input.obj-input, input.wdr-input, input.aff-input, textarea.journal-textarea');
+      const fieldsData = {};
+      allFields.forEach((el, i) => { fieldsData['field_' + i] = el.value; });
+      data.fields = fieldsData;
+
+      // Input mot du mois et intention
+      const intentionTA = document.querySelector('#page-cover .section-card.mint textarea');
+      if (intentionTA) data.intention = intentionTA.value;
+      const motInput = document.querySelector('#page-cover .section-card.lilac input');
+      if (motInput) data.motDuMois = motInput.value;
+
+      // Objectifs cochés
+      const checks = [];
+      document.querySelectorAll('.obj-check').forEach(el => checks.push(el.classList.contains('checked')));
+      data.checks = checks;
+
+      // Humeurs du mood grid
+      const moods = [];
+      document.querySelectorAll('.mood-cell').forEach(el => {
+        moods.push({ emoji: el.querySelector('.mood-cell-emoji')?.textContent || '·', bg: el.style.background || '' });
+      });
+      data.moods = moods;
+
+      // Journal — texte actuel
+      const jText = document.getElementById('journal-text');
+      if (jText) {
+        const activeBtn = document.querySelector('.jdate-btn.active');
+        if (activeBtn) {
+          const d = parseInt(activeBtn.querySelector('.jdate-num').textContent);
+          journalData[d] = jText.value;
+        }
+      }
+      data.journalEntries = journalData;
+
+      // Note humeur semaine
+      const moodNote = document.querySelector('#page-humeur textarea');
+      if (moodNote) data.moodNote = moodNote.value;
+
+      // Affirmations perso
+      const affTA = document.querySelector('#page-affirmations .section-card.mint textarea');
+      if (affTA) data.affCitation = affTA.value;
+      const affAuteur = document.querySelector('#page-affirmations .section-card.mint input');
+      if (affAuteur) data.affAuteur = affAuteur.value;
+
+      localStorage.setItem('monMars2025', JSON.stringify(data));
+
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1500);
+    } catch(e) { console.log('Save error', e); }
+  }
+
+  function restoreAll() {
+    try {
+      const raw = localStorage.getItem('monMars2025');
+      if (!raw) return;
+      const data = JSON.parse(raw);
+
+      // Prénom
+      const ownerEl = document.getElementById('owner-name');
+      if (ownerEl && data.ownerName) ownerEl.value = data.ownerName;
+
+      // Champs indexés
+      if (data.fields) {
+        const allFields = document.querySelectorAll('input.obj-input, input.wdr-input, input.aff-input, textarea.journal-textarea');
+        allFields.forEach((el, i) => {
+          if (data.fields['field_' + i] !== undefined) el.value = data.fields['field_' + i];
+        });
+      }
+
+      // Intention et mot du mois
+      if (data.intention) {
+        const el = document.querySelector('#page-cover .section-card.mint textarea');
+        if (el) el.value = data.intention;
+      }
+      if (data.motDuMois) {
+        const el = document.querySelector('#page-cover .section-card.lilac input');
+        if (el) el.value = data.motDuMois;
+      }
+
+      // Objectifs cochés
+      if (data.checks) {
+        document.querySelectorAll('.obj-check').forEach((el, i) => {
+          if (data.checks[i]) el.classList.add('checked');
+        });
+      }
+
+      // Humeurs
+      if (data.moods) {
+        document.querySelectorAll('.mood-cell').forEach((el, i) => {
+          if (data.moods[i] && data.moods[i].emoji !== '·') {
+            el.querySelector('.mood-cell-emoji').textContent = data.moods[i].emoji;
+            el.style.background = data.moods[i].bg;
+            el.classList.add('selected-mood');
+          }
+        });
+      }
+
+      // Journal
+      if (data.journalEntries) {
+        Object.assign(journalData, data.journalEntries);
+        const d = 1;
+        if (journalData[d]) {
+          const jt = document.getElementById('journal-text');
+          if (jt) jt.value = journalData[d];
+        }
+      }
+
+      // Note humeur semaine
+      if (data.moodNote) {
+        const el = document.querySelector('#page-humeur textarea');
+        if (el) el.value = data.moodNote;
+      }
+
+      // Citation affirmation
+      if (data.affCitation) {
+        const el = document.querySelector('#page-affirmations .section-card.mint textarea');
+        if (el) el.value = data.affCitation;
+      }
+      if (data.affAuteur) {
+        const el = document.querySelector('#page-affirmations .section-card.mint input');
+        if (el) el.value = data.affAuteur;
+      }
+
+    } catch(e) { console.log('Restore error', e); }
+  }
+
+  function autoSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveAll, 800);
+  }
+
+  // ── Init ──
+  buildCalendar();
+  buildWeeks();
+  buildDateNav();
+  buildMoodGrid();
+  setTimeout(() => { restoreAll(); restorePersonalization(); }, 150);
+</script>
+</body>
+</html>
